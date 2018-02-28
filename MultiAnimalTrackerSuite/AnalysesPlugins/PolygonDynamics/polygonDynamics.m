@@ -1,22 +1,38 @@
-function [ wormsAtRegion ] = polygonDynamics( tracker, shouldPlot )
+function [ wormsAtRegion ] = polygonDynamics( tracker, shouldPlot, varargin )
 %POLYGONDYNAMICS
 % This method returns the number of worms in a specific polygon in the
 % field over time.
+% Can optionally accept the tracks and the polygon to use (otherwise, all
+% tracks in the tracker will be used, and the user will be prompted to
+% select the polygon on the first frame of the video.
 
-% Showing the first frame.
-h = figure();
-imshow(tracker.getRawFrame(1));
-title('Please mark a polygon (Right click on the image when finished');
+p = inputParser;
+addParameter(p, 'Tracks', []);
+addParameter(p, 'Polygon', []);
+parse(p, varargin{:});
 
-% Marking polygone.
-[polyX, polyY] = getline('closed');
-close(h);
+if isempty(p.Results.Polygon)
+    % Showing the first frame.
+    h = figure();
+    imshow(tracker.getRawFrame(1));
+    title('Please mark a polygon (Right click on the image when finished');
+
+    % Marking polygon.
+    [polyX, polyY] = getline('closed');
+    close(h);
+else
+    polyX = p.Results.Polygon(:,1);
+    polyY = p.Results.Polygon(:,2);
+end
 
 % The range of frames we'll iterate over.
 rangeOfFrames = 1:tracker.numberOfFrames;
 
-% Relevant tracks.
-refTracks = tracker.tracks;
+if isempty(p.Results.Tracks)
+    refTracks = tracker.tracks;
+else
+    refTracks = p.Results.Tracks;
+end
 
 % Initializing
 wormsAtRegion = zeros(1,length(rangeOfFrames));
