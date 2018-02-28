@@ -1,6 +1,6 @@
 function [ ] = trackerCrawler( sourceDirectory, targetDirectory )
     % First we're looking for movie files (*.mj2)
-    lister = FileLister(sourceDirectory,'*.avi');
+    lister = FileLister(sourceDirectory,'*.mj2');
     videoFiles = lister.allFiles();
     numberOfMovies = length(videoFiles);
     
