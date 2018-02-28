@@ -1,0 +1,13 @@
+function angles = GetAnglesBetweenSteps(velocity_vectors)
+% TODO: this seems to be used in places, but is incorrect as written.
+
+[num_of_vecs, ~] = size(velocity_vectors);
+
+angles = zeros(num_of_vecs - 1, 1);
+for ix = 1:length(angles)
+    vec1 = velocity_vectors(ix,:);
+    vec2 = velocity_vectors(ix+1,:);
+    angles(ix) = GetAngle(vec1, vec2);
+end
+
+end
