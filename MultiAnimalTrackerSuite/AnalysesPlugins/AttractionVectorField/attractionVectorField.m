@@ -1,5 +1,9 @@
-function [ xPos, yPos,xVec,yVec, background] = attractionVectorField( tracker, flip )
-%SHOWQUIVER Summary of this function goes here
+function [ xPos, yPos,xVec,yVec, background] = attractionVectorField( tracker, flip, varargin )
+% Can optionally take a subset of the tracks in the tracker.
+
+p = inputParser;
+addParameter(p, 'Tracks', []);
+parse(p, varargin{:});
 
 if (~exist('flip','var'))
     flip = 0;
@@ -8,7 +12,11 @@ end
 
 f = figure('units','normalized','outerposition',[0 0 1 1],'visible', 'on');
     
-    tracks = tracker.tracks;
+    if isempty(p.Results.Tracks)
+        tracks = tracker.tracks;
+    else
+        tracks = p.Results.Tracks;
+    end
     
     frameSize = size(tracker.getRawFrame(1));
     
