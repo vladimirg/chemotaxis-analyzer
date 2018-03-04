@@ -2051,6 +2051,7 @@ classdef VideoTracker < handle
     methods (Static)
       function obj = loadobj(s)
         s.initialize();
+        obj = s;
       end
    end
 end
