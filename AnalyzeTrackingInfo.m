@@ -1,4 +1,4 @@
-function tracking_info = AnalyzeTrackingInfo(filename, movie_features, start_frame, stop_frame)
+function tracking_info = AnalyzeTrackingInfo(filename, movie_features)
 
 load(filename, 'tracks', 'tracker');
 
@@ -43,16 +43,14 @@ for track_ix = 1:length(tracks)
 %     filtered_step_sizes = StepSizes(filtered_path);
     track.filteredPath = path;
     track.filteredStepSizes = StepSizes(path);
-%     filtered_tracks(track_ix).medianDisplacement = median_displacement;
-%     filtered_tracks(track_ix).meanDisplacement = mean_displacement;
     velocity_vectors = GetVelocityVectors(path);
-    track.velocityVecotrs = velocity_vectors;
+    track.velocityVectors = velocity_vectors;
     track.bearings = GetBearingsToTargetPoint(path, drop_center);
     track.absoluteBearings = GetBearingsToVector(path, [1 0]);
     track.anglesBetweenSteps = ...
         GetAnglesBetweenSteps(velocity_vectors);
     
-    % Sometimes worms pass through a blotch on the plate, even after
+    % Sometimes worms pass through a stain on the plate, even after
     % filtering. The tracker thinks the worm remained in place, and this
     % can create hundreds and thousands of near-stationary points. We
     % filter them out by using a moving window - the values were chosen

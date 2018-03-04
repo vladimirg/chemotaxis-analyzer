@@ -1,5 +1,4 @@
 function angles = GetAnglesBetweenSteps(velocity_vectors)
-% TODO: this seems to be used in places, but is incorrect as written.
 
 [num_of_vecs, ~] = size(velocity_vectors);
 

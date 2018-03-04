@@ -7,11 +7,6 @@ mat_files = GetTrackingInfoFiles(in_folder);
 load(movie_features_file);
 all_features = features; % For parfor
 
-frames_file = 'F:\tmp\test tracks\frames.xlsx';
-[~, ~, frames_raw] = xlsread(frames_file, 'Comments');
-
-% analyzed_data = struct();
-
 header = {'Filename', 'Strain', 'Odorant concentration', 'Filtered tracks',...
     'Mean length', 'Median length',...
     'Mean steps', 'Median steps', ...
@@ -21,23 +16,12 @@ output(1,:) = header;
 for ix = 1:length(mat_files)
     tracking_info_file = mat_files{ix};
     
-%     if ~(contains(tracking_info_file, 'Dec'))
-%         continue
-%     end
-    
-    frames_row = frames_raw(cellfun(@(n) contains(tracking_info_file, num2str(n)), frames_raw(:,1)) & ...
-        (cellfun(@ischar, frames_raw(:,2)) |...
-         ~cellfun(@(n) (~ischar(n) && isnan(n)), frames_raw(:,2))),...
-        2:3);
-    start_frame = frames_row{1};
-    stop_frame = frames_row{2};
-    if ischar(stop_frame)
-        frame_split = strsplit(stop_frame, '-');
-        stop_frame = str2num(frame_split{1});
+    if ~(contains(tracking_info_file, 'Feb'))
+        continue
     end
     
     movie_features = all_features(cellfun(@(name) contains(tracking_info_file, name(1:end-5)), {all_features.name}));
-    tracking_info = AnalyzeTrackingInfo(tracking_info_file, movie_features, start_frame, stop_frame);
+    tracking_info = AnalyzeTrackingInfo(tracking_info_file, movie_features);
     
 %     plate_center = movie_features.plate{1};
     plate_radius = movie_features.plate{2};
@@ -72,7 +56,7 @@ for ix = 1:length(mat_files)
     name = tracking_info.tracker.name;
     comments = tracking_info.comments;
     tracker = tracking_info.tracker;
-    save(fullfile(out_folder, [name '.analyzed_tracks.mat']), 'name', 'tracks', 'movie_features', 'comments', 'tracker');
+    save(fullfile(out_folder, [name '.preprocessed_tracks.mat']), 'name', 'tracks', 'movie_features', 'comments', 'tracker');
     
     output(ix+1,:) = {tracking_info.tracker.name, tracking_info.comments.Strain, ...
         tracking_info.comments.OdorantConcentration, length(tracks),...

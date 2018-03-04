@@ -1,6 +1,11 @@
 function segmentedPath = SegmentTrackPath(track, fps)
 % Output is relative to velocity vector origins.
 % If there are N steps, then the output length will be N-1.
+% Segments each point into a path type (possibly more than one), as
+% specified in SegmentMasks.
+% The output is a bit vector, as it is possible for a point to be
+% classified into a number of path types (e.g., a point can be part of
+% short run within a pirouette, but not be a sharp turn).
 
 % TODO: verify this is consistent in each and every strain, and between
 % different experiments.

@@ -1,6 +1,13 @@
 function [segments, varargout] = SegmentVector(vector)
 % Returns the segments, and optionally the number of segments (in the
-% second parameter).
+% second parameter). Segments are defined as consecutive runs of the same
+% value. The output is Nx3, where N is the number of segments, the first
+% column is the first index of the segment, the second column is the
+% last index of the segment, and the third column is the value of the
+% index. For example, [0 1 1 0] will be segmented into:
+% [1 1 0]
+% [2 3 1]
+% [4 4 0]
 
 if isempty(vector)
     segments = [];

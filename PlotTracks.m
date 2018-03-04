@@ -1,15 +1,19 @@
 function out_fig = PlotTracks(tracks, movie_features, varargin)
+% Plot the given  tracks on a schematic representatation of the plate.
+% Accepts various optional arguments, most importantly 'SegmentWithFps',
+% which shows the track as it is segmented.
 
 p = inputParser;
 addParameter(p, 'IndexLabels', -1);
 addParameter(p, 'MarkIndexes', {});
 addParameter(p, 'MarkSymbol', 'x');
-addParameter(p, 'SegmentWithFps', -1);
+addParameter(p, 'SegmentWithFps', -1); % TODO: we don't need to pass the FPS as an explicit parameter anymore, since it's included in movie_features.
 addParameter(p, 'OmitIndexing', true);
-addParameter(p, 'OmitKinks', true);
+addParameter(p, 'OmitKinks', true); % TODO: kinks aren't a thing anymore in our code. Consider removing.
 addParameter(p, 'OmitSharpTurns', true);
+% TODO: smoothing should not longer be necessary (or, at least, should be
+% implemented differnetly.
 addParameter(p, 'Smoothing', 'None'); % Can also take 'Add' and 'Only'
-%addParameter(p, 'TimeSeries', 3); % In FPS
 parse(p, varargin{:});
 
 out_fig = figure;

@@ -1,13 +1,19 @@
 function weathervane = Weathervane(track, movie_features)
+% Compute the weathervane stats of a track. Per Iino, this is the change in
+% bearing between the bearing of a local velocity vector and the bearing to
+% the point 1 mm "into the future".
+% The output is an Nx4 matrix, where the columns are:
+% 1 - the bearing of the local velocity vector.
+% 2 - the change in bearing, as defined above.
+% 3 - the frame of the velocity vector.
+% 4 - the distance between the origin of the velocity vector and the
+%     center of the odorant.
 
 segmented_track = SegmentTrackPath(track, movie_features.fps);
 long_run = bitand(segmented_track, SegmentMasks.LongRun) == SegmentMasks.LongRun;
 [long_run_segments, num_of_long_runs] = SegmentVector(long_run);
 
 drop_center = movie_features.drop{1};
-
-% We trust the bearings since we smoothed the path, but we still want to
-% look ahead 1 mm for the psi, as Iino did.
 
 weathervane = [];
 for segment_ix = 1:num_of_long_runs
@@ -26,7 +32,7 @@ for segment_ix = 1:num_of_long_runs
             if Dist(curr_point, next_point) > movie_features.pixels_per_mm
                 weathervane(end+1,:) = [ ...
                     track.bearings(ix) ...
-                    GetAngle(track.velocityVecotrs(ix,:), next_point - curr_point) ...
+                    GetAngle(track.velocityVectors(ix,:), next_point - curr_point) ...
                     track.filteredPath(ix,1) ...
                     Dist(curr_point, drop_center) ...
                 ];
@@ -35,14 +41,5 @@ for segment_ix = 1:num_of_long_runs
         end
     end
 end
-
-% figure;
-% bin_edges = -180:20:180;
-% bearing_bins = discretize(weathervane(:,1), bin_edges);
-% avg_per_bin = zeros(length(bin_edges)-1, 1);
-% for bin_ix = 1:length(avg_per_bin)
-%     avg_per_bin(bin_ix) = mean(weathervane(bearing_bins == bin_ix,2));
-% end
-% bar(bin_edges(1:end-1), avg_per_bin);
 
 end
