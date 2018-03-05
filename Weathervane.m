@@ -15,6 +15,7 @@ long_run = bitand(segmented_track, SegmentMasks.LongRun) == SegmentMasks.LongRun
 
 drop_center = movie_features.drop{1};
 
+fp = track.filteredPath(:,2:3);
 weathervane = [];
 for segment_ix = 1:num_of_long_runs
     if ~long_run_segments(segment_ix,3)
@@ -25,10 +26,10 @@ for segment_ix = 1:num_of_long_runs
     stop_ix = long_run_segments(segment_ix,2);
     
     for ix = start_ix:stop_ix-1
-        curr_point = track.filteredPath(ix,2:3);
+        curr_point = fp(ix,:);
         % Look ahead to 1 mm
         for next_ix = ix+1:stop_ix
-            next_point = track.filteredPath(next_ix,2:3);
+            next_point = fp(next_ix,:);
             if Dist(curr_point, next_point) > movie_features.pixels_per_mm
                 weathervane(end+1,:) = [ ...
                     track.bearings(ix) ...
